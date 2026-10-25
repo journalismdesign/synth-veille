@@ -1,0 +1,78 @@
+# Configuration de la veille Synth.
+# Les axes reprennent la page Notion « Positionnement de Synth et de notre journalisme ».
+# Correspondance par mot entier ; « mot* » = préfixe (subsid* → subsidy, subsidies).
+# Les mots-clés servent au PRÉFILTRE lexical des sources académiques (bon marché, grossier) ;
+# le tri éditorial fin est fait par l'agent « trieur » selon docs/grille-notation.md.
+
+[prefiltre]
+# Nombre minimal de mots-clés d'axes trouvés pour garder un item académique
+score_minimum_academique = 2
+
+[axes]
+"Infrastructures" = ["data center", "datacenter", "centre de données", "cloud", "semiconductor", "semi-conducteur", "chip*", "cable", "câble", "compute", "infrastructure", "satellite", "energy grid", "réseau électrique"]
+"Travail" = ["labor", "labour", "worker*", "travail", "travailleur", "gig", "platform work", "plateforme", "click work", "microtravail", "micro-travail", "annotation", "algorithmic management", "management algorithmique", "automation", "automatisation", "employment", "emploi", "union", "syndicat", "wage", "salaire"]
+"Économie politique" = ["big tech", "monopoly", "monopole", "antitrust", "concurrence", "competition", "market power", "venture capital", "capital-risque", "investment", "valuation", "subsid*", "lobbying", "lobby", "political economy", "économie politique", "rent", "rente", "concentration", "industrial policy", "politique industrielle", "bubble", "bulle"]
+"Droits & libertés" = ["surveillance", "privacy", "vie privée", "data protection", "rgpd", "gdpr", "facial recognition", "reconnaissance faciale", "biometric*", "biométrique", "discrimination", "bias", "biais", "civil liberties", "libertés", "copyright", "droit d'auteur", "ai act", "regulation", "régulation"]
+"Médias & information" = ["journalism", "journalisme", "news", "médias", "media", "misinformation", "disinformation", "désinformation", "content moderation", "modération", "recommendation algorithm", "social media", "réseaux sociaux", "search engine", "moteur de recherche", "attention", "influencer*"]
+"Démocratie & pouvoir" = ["democracy", "démocratie", "election*", "élection", "authoritarian", "autoritaire", "fascism", "fascisme", "techno-fascism", "populism", "populisme", "état", "military", "militaire", "defense", "défense", "sovereignty", "souveraineté", "geopolitic*", "géopolitique", "governance", "gouvernance", "public sector", "service public"]
+"Imaginaires & récits" = ["imaginary", "imaginaire", "narrative", "récit", "hype", "ideology", "idéologie", "longtermism", "longtermisme", "transhumanism", "transhumanisme", "agi", "superintelligence", "utopia", "utopie", "science fiction", "discourse", "discours", "promise", "promesse"]
+"Environnement" = ["climate", "climat", "carbon", "carbone", "emission*", "émission", "water", "eau", "energy", "énergie", "electricity", "électricité", "mining", "extractivism", "extractivisme", "e-waste", "déchets", "sustainab*", "durabilité", "ecolog*", "écolog*"]
+"Corps & populations exposées" = ["health", "santé", "mental health", "santé mentale", "children", "enfants", "youth", "jeunes", "migrant*", "gender", "genre", "women", "femmes", "global south", "sud global", "disability", "handicap", "welfare", "aide sociale", "poverty", "pauvreté", "chatbot companion", "compagnon"]
+
+[inoreader]
+# Flux lus : étoiles + tag « Synth » (créer le tag dans Inoreader et y ranger ce qui compte)
+flux = ["user/-/state/com.google/starred", "user/-/label/Synth"]
+
+[openalex]
+mailto = "hello@journalism.design"
+par_requete = 25
+# Champs OpenAlex : 33 Sciences sociales, 20 Économie, 14 Gestion, 12 Arts & humanités, 32 Psychologie
+champs = ["fields/33", "fields/20", "fields/14", "fields/12", "fields/32"]
+requetes = [
+  "artificial intelligence labor",
+  "platform work algorithmic management",
+  "data annotation workers",
+  "generative AI political economy",
+  "big tech market power antitrust",
+  "data centers energy water",
+  "AI environmental impact",
+  "surveillance technology state",
+  "content moderation platforms",
+  "generative AI journalism news",
+  "digital sovereignty Europe",
+  "tech industry lobbying regulation",
+  "AI hype narratives imaginaries",
+  "technology authoritarianism",
+  "AI companions mental health",
+]
+
+[arxiv]
+par_categorie = 100
+# cs.CY Computers and Society, econ.GN économie générale, cs.HC interaction humain-machine, cs.SI réseaux sociaux
+categories = ["cs.CY", "econ.GN", "cs.HC", "cs.SI"]
+
+[hal]
+par_requete = 30
+requetes = [
+  "intelligence artificielle",
+  "plateformes numériques travail",
+  "numérique environnement",
+  "surveillance numérique",
+  "souveraineté numérique",
+  "désinformation réseaux sociaux",
+  "économie des plateformes",
+]
+
+[socarxiv]
+pages_max = 5
+
+[canva]
+# ID du modèle de marque Canva « Synth carrousel » (8 pages, champs titre_1…8 / texte_1…8).
+# Laisser vide : l'agent metteur-en-forme le cherchera par son nom.
+modele_carrousel = ""
+
+[notion]
+base_veille = "fdd64e2eb6514b498e43b99b7c22f0f0"
+data_source_veille = "collection://900b874c-1900-4bcf-80f3-28765e03dbf4"
+page_newsroom = "a422a0c663b549b9a057aee1dd747557"
+page_positionnement = "3ed5552d04288046b862e7e0b81a92d3"
