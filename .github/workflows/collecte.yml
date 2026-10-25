@@ -6,6 +6,7 @@
 name: Collecte veille
 
 on:
+  pull_request:          # sur PR : tests seulement, pas de collecte
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
@@ -27,6 +28,7 @@ jobs:
 
   collecte:
     needs: tests
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
