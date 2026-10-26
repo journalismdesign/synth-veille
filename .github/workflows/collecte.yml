@@ -2,8 +2,16 @@
 # Secrets à créer (Settings → Secrets and variables → Actions) :
 #   NOTION_TOKEN, NOTION_DATABASE_ID,
 #   INOREADER_APP_ID, INOREADER_APP_KEY, INOREADER_REFRESH_TOKEN,
-#   OPENALEX_API_KEY (facultatif)
+#   OPENALEX_API_KEY (facultatif),
+#   GH_SECRETS_PAT : jeton GitHub « fine-grained » limité à ce dépôt, permission
+#     « Secrets : Read and write ». Sert uniquement à enregistrer le refresh_token
+#     qu'Inoreader renouvelle à chaque connexion.
 name: Collecte veille
+
+# Deux collectes simultanées utiliseraient le même refresh_token, que la première invalide
+concurrency:
+  group: collecte
+  cancel-in-progress: false
 
 on:
   pull_request:          # sur PR : tests seulement, pas de collecte
@@ -44,8 +52,25 @@ jobs:
           INOREADER_APP_KEY: ${{ secrets.INOREADER_APP_KEY }}
           INOREADER_REFRESH_TOKEN: ${{ secrets.INOREADER_REFRESH_TOKEN }}
           OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+          INOREADER_NOUVEAU_JETON_FICHIER: ${{ runner.temp }}/inoreader_refresh_token
         run: |
           # Inoreader n'est lancé que si ses secrets existent
           SOURCES="openalex,arxiv,hal,socarxiv"
           if [ -n "$INOREADER_REFRESH_TOKEN" ]; then SOURCES="inoreader,$SOURCES"; fi
           python -m veille.collecte --sources "$SOURCES" --depuis "${{ inputs.depuis || '2' }}"
+
+      - name: Mise à jour du jeton Inoreader
+        # always() : le jeton a déjà tourné même si une autre source a échoué ensuite
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GH_SECRETS_PAT }}
+          FICHIER: ${{ runner.temp }}/inoreader_refresh_token
+        run: |
+          if [ ! -s "$FICHIER" ]; then echo "Jeton Inoreader inchangé."; exit 0; fi
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::Nouveau refresh_token Inoreader non enregistré : créer le secret GH_SECRETS_PAT (voir README)."
+            exit 1
+          fi
+          gh secret set INOREADER_REFRESH_TOKEN --repo "$GITHUB_REPOSITORY" < "$FICHIER"
+          rm -f "$FICHIER"
+          echo "Secret INOREADER_REFRESH_TOKEN mis à jour."
