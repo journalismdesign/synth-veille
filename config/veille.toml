@@ -7,6 +7,17 @@
 [prefiltre]
 # Nombre minimal de mots-clés d'axes trouvés pour garder un item académique
 score_minimum_academique = 2
+# Un item académique doit aussi contenir au moins un de ces termes : sans eux, un article
+# de science politique ou d'économie sans rapport avec le numérique passait le seuil.
+ancrage_tech = ["ai", "a.i.", "artificial intelligence", "intelligence artificielle", "ia", "machine learning",
+  "apprentissage automatique", "algorithm*", "algorithmi*", "platform*", "plateforme*", "digital", "numérique*",
+  "data", "données", "dataset*", "datafication", "internet", "online", "en ligne", "social media", "réseaux sociaux",
+  "chatbot*", "llm*", "large language model*", "generative", "générative", "automation", "automatisation",
+  "big tech", "tech industry", "technolog*", "software", "logiciel*", "cloud", "data center*", "datacenter*", "data centre*", "datacentre*",
+  "centre de données", "semiconductor*", "semi-conducteur*", "surveillance", "biometric*", "biométri*",
+  "facial recognition", "reconnaissance faciale", "robot*", "gig", "uber", "amazon", "google", "meta",
+  "facebook", "tiktok", "openai", "microsoft", "nvidia", "silicon valley", "crypto*", "blockchain", "computing",
+  "cyber*", "deepfake*", "misinformation", "disinformation", "désinformation", "content moderation", "modération"]
 
 [axes]
 "Infrastructures" = ["data center", "datacenter", "centre de données", "cloud", "semiconductor", "semi-conducteur", "chip*", "cable", "câble", "compute", "infrastructure", "satellite", "energy grid", "réseau électrique"]
@@ -25,6 +36,7 @@ flux = ["user/-/state/com.google/starred", "user/-/label/Synth"]
 
 [openalex]
 mailto = "hello@journalism.design"
+langues = ["en", "fr"]
 par_requete = 25
 # Champs OpenAlex : 33 Sciences sociales, 20 Économie, 14 Gestion, 12 Arts & humanités, 32 Psychologie
 champs = ["fields/33", "fields/20", "fields/14", "fields/12", "fields/32"]

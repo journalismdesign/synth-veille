@@ -24,6 +24,7 @@ def collecter(config: dict, depuis: date) -> list[Item]:
             "filter": ",".join([
                 f"from_publication_date:{depuis.isoformat()}",
                 "type:article|preprint|report",
+                f"language:{'|'.join(conf.get('langues', ['en', 'fr']))}",
                 f"primary_topic.field.id:{'|'.join(conf['champs'])}",
             ]),
             "sort": "publication_date:desc",

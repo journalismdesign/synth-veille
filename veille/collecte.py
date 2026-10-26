@@ -14,7 +14,7 @@ import sys
 from datetime import date, timedelta
 from pathlib import Path
 
-from .modele import Item, charger_config, prequalifier
+from .modele import Item, a_ancrage_tech, charger_config, prequalifier
 from .sources import arxiv, hal, inoreader, instagram, openalex, socarxiv
 
 SOURCES = {"inoreader": inoreader, "openalex": openalex, "arxiv": arxiv, "hal": hal, "socarxiv": socarxiv}
@@ -34,6 +34,7 @@ def main() -> int:
     depuis = date.today() - timedelta(days=args.depuis)
     axes = config["axes"]
     seuil = config["prefiltre"]["score_minimum_academique"]
+    ancrage = config["prefiltre"]["ancrage_tech"]
 
     items: list[Item] = []
     echecs = []
@@ -52,7 +53,7 @@ def main() -> int:
     retenus, vus = [], set()
     for it in items:
         prequalifier(it, axes)
-        if it.canal not in SOURCES_CURATEES and it.prescore < seuil:
+        if it.canal not in SOURCES_CURATEES and (it.prescore < seuil or not a_ancrage_tech(it, ancrage)):
             continue
         if it.empreinte in vus:
             continue

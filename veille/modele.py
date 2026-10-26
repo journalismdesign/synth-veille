@@ -81,3 +81,9 @@ def prequalifier(item: Item, axes_motscles: dict[str, list[str]]) -> Item:
             item.axes.append(axe)
             item.prescore += trouves
     return item
+
+
+def a_ancrage_tech(item: Item, motscles: list[str]) -> bool:
+    """Vrai si titre ou résumé contiennent au moins un terme numérique (voir [prefiltre].ancrage_tech)."""
+    texte = f"{item.titre} {item.resume}".lower()
+    return any(motif(m).search(texte) for m in motscles)
