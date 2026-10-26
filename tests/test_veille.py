@@ -88,3 +88,16 @@ def test_instagram_export(tmp_path):
     ]}))
     (it,) = instagram.collecter_export(f, date(2025, 1, 1))
     assert it.source == "@casilli" and it.canal == "Instagram"
+
+
+def test_ancrage_tech_ecarte_les_hors_sujet():
+    from veille.modele import a_ancrage_tech
+    ancrage = charger_config()["prefiltre"]["ancrage_tech"]
+    hors_sujet = Item("Article 370, Kashmir, and the Politics of Constitutional Integration in India",
+                      "https://x", "SocArXiv", resume="Consent, sovereignty and judicial power.")
+    pertinent = Item("Detecting AI Training in Datacentre Power", "https://y", "arXiv")
+    sonnac = Item("Plateformes numériques, manipulation de l’information", "https://z", "HAL")
+    assert not a_ancrage_tech(hors_sujet, ancrage)
+    assert a_ancrage_tech(pertinent, ancrage) and a_ancrage_tech(sonnac, ancrage)
+    # « meta » mot entier : ne doit pas capter « metabolism »
+    assert not a_ancrage_tech(Item("Metabolism of soil", "https://m", "OpenAlex"), ancrage)
