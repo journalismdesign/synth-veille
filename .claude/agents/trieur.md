@@ -35,6 +35,9 @@ Une liste d'URL de fiches Notion (base « Veille Synth », data source
    « Doublon de <titre> » en justification.
 5. Statut : « Trié » si Score ≥ 8, sinon « Écarté ».
 6. Applique le bonus d'origine de la grille (+2 pour « 1 · Sauvé ») et mentionne-le dans la justification.
+7. Renseigne `Échelle` (France, Europe, International) selon le lieu de l'enjeu, pas la
+   langue de la source, et applique le bonus de proximité (+2 France, +1 Europe) [S-04].
+   Mentionne-le dans la justification (« proximité : +2 France »).
 
 ## Règles
 - Ne change jamais un statut vers « Candidat », « Retenu NL » ou « Retenu article » [P-01].

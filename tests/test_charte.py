@@ -11,6 +11,13 @@ def test_charte_charge_et_identifiants_uniques():
     assert "[F-01]" in charte.premisse()
 
 
+def test_regle_mort_kilometre():
+    # S-04 : la proximité (France, puis Europe, puis international) ordonne le top 5
+    regle = charte.regles()["S-04"]
+    assert "Mort-kilomètre" in regle.texte
+    assert "Échelle" in regle.texte
+
+
 def test_relecture_detecte_les_tics_et_le_point_median():
     texte = ("À l'heure où tout change, ce n'est pas une crise, c'est une mutation. "
              "Les lecteurs y verront une véritable révolution.\n")

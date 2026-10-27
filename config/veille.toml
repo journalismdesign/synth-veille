@@ -95,3 +95,13 @@ base_veille = "fdd64e2eb6514b498e43b99b7c22f0f0"
 data_source_veille = "collection://900b874c-1900-4bcf-80f3-28765e03dbf4"
 page_newsroom = "a422a0c663b549b9a057aee1dd747557"
 page_positionnement = "3ed5552d04288046b862e7e0b81a92d3"
+# Diffusion interne de la proposition hebdomadaire (étape 7 de /veille-hebdo)
+page_aujourdhui = "4065552d0428811291cfd7fbdc722daf"
+data_source_production = "collection://891ebc70-9392-4949-af83-1a1d4b5ed08f"
+
+[diffusion]
+# Courriel interne de décision : top 5 + 5 propositions. Ce n'est pas une publication.
+courriel_redaction = "redaction.synth@proton.me"
+# Calendrier : choix de Gerald jeudi midi, publication vendredi après-midi.
+choix = "jeudi 12:00"
+publication = "vendredi après-midi"

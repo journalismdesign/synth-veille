@@ -1,6 +1,6 @@
 ---
 name: redaction-hebdo
-description: Après validation de la sélection par Gerald, produit la newsletter (5 brèves), l'article de 3000 signes, les carrousels Instagram (textes + designs Canva) et le post LinkedIn de la semaine. À lancer à la main le lundi.
+description: Après validation de la sélection par Gerald, produit la newsletter (5 brèves), l'article de 3000 signes, les carrousels Instagram (textes + designs Canva) et le post LinkedIn de la semaine. À lancer à la main le jeudi après-midi, pour une publication le vendredi après-midi.
 ---
 
 # Rédaction hebdomadaire Synth

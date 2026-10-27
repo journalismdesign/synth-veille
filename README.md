@@ -26,9 +26,11 @@ Instagram ─┘  (partage → Notion)          │
 | En continu | Collecte vers Notion | GitHub Actions |
 | En continu | Partage des posts Instagram vers Notion | Gerald (5 s/post) |
 | Dimanche soir | `/veille-hebdo` → page « Sélection semaine N » | Tâche planifiée Claude |
-| Lundi matin | Cocher 5 « Retenu NL » + 1–2 « Retenu article » | Gerald |
-| Lundi | `/redaction-hebdo` → brouillons | Claude |
-| Lundi–mardi | Relecture, publication | Gerald |
+| Dimanche soir | Courriel top 5 + 5 propositions à la rédaction, encart « Aujourd'hui », sommaire dans la carte NL | Claude |
+| Jusqu'à jeudi midi | Cocher 5 « Retenu NL » + 1–2 « Retenu article » | Gerald |
+| Jeudi après-midi | `/redaction-hebdo` → brouillons | Claude |
+| Vendredi matin | Relecture | Gerald |
+| Vendredi après-midi | Publication newsletter et Instagram (pour le week-end) | Gerald |
 
 ## Mise en route
 

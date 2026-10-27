@@ -8,7 +8,7 @@
 # controle : "auto" (vérifié par le code), "agent" (vérifié par un agent), "humain" (Gerald)
 # severite : "bloquant" (le contenu ne sort pas), "alerte" (signalé, décision humaine)
 
-version = "1.0.0"
+version = "1.1.0"
 
 # ─── P : principes de fonctionnement ──────────────────────────────────────────
 
@@ -200,6 +200,13 @@ severite = "alerte"
 id = "S-03"
 famille = "Sélection"
 texte = "Un sujet repris par plusieurs sources indépendantes (Résonance ≥ 3) est examiné en priorité : ni le plus bruyant, ni le plus récent, celui qui revient de plusieurs endroits."
+controle = "agent"
+severite = "alerte"
+
+[[regle]]
+id = "S-04"
+famille = "Sélection"
+texte = "Mort-kilomètre : à intérêt comparable, un sujet français passe avant un sujet européen ou francophone, qui passe avant un sujet international. Chaque fiche triée porte son Échelle (France, Europe, International) ; le bonus de proximité de la grille s'applique ; le top 5 hebdomadaire s'ordonne par échelle puis par score. Un sujet international ne monte que s'il éclaire une situation française ou européenne, ou si son enjeu de pouvoir l'emporte nettement."
 controle = "agent"
 severite = "alerte"
 

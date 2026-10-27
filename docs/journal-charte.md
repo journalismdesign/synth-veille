@@ -20,6 +20,17 @@ amendée ; correctif = lexique ou formulation.
 
 ---
 
+## v1.1.0 — 2026-10-27
+- Règle : S-04 (créée)
+- Incident : la sélection de la semaine 44 classait au même rang des sujets américains et
+  français à score voisin ; Gerald demande d'appliquer le mort-kilomètre.
+- Cause : aucune règle ne pondérait la proximité ; S-03 (résonance) favorise mécaniquement
+  la presse anglophone, plus nombreuse dans les flux.
+- Changement : nouvelle règle S-04 ; bonus de proximité dans `docs/grille-notation.md`
+  (+2 France, +1 Europe et francophonie) ; propriété Notion `Échelle` ; top 5 ordonné par
+  échelle puis score.
+- Contrôle : agent (`trieur`, `/veille-hebdo`) — test ajouté : oui, présence de S-04.
+
 ## v1.0.0 — 2026-10-27
 - Création de la charte codée à partir de la page Notion « Positionnement de Synth et de
   notre journalisme », de `docs/grille-notation.md` et de `docs/gabarits.md`.
