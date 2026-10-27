@@ -10,6 +10,7 @@ import html
 import os
 import re
 from datetime import date, datetime, timezone
+from pathlib import Path
 
 import requests
 
@@ -28,10 +29,27 @@ def jeton_acces() -> str:
     })
     r.raise_for_status()
     donnees = r.json()
-    if donnees.get("refresh_token") and donnees["refresh_token"] != os.environ["INOREADER_REFRESH_TOKEN"]:
-        # Si Inoreader fait tourner le jeton, il faut mettre à jour le secret GitHub
-        print("::warning::Inoreader a émis un nouveau refresh_token : mettre à jour le secret.")
+    nouveau = donnees.get("refresh_token")
+    if nouveau and nouveau != os.environ["INOREADER_REFRESH_TOKEN"]:
+        memoriser_nouveau_jeton(nouveau)
     return donnees["access_token"]
+
+
+def memoriser_nouveau_jeton(jeton: str) -> None:
+    """Inoreader fait tourner le refresh_token : on le confie à l'étape suivante du workflow.
+
+    Le jeton est masqué dans les journaux GitHub, puis écrit dans un fichier temporaire
+    (INOREADER_NOUVEAU_JETON_FICHIER) que l'étape « Mise à jour du jeton Inoreader »
+    recopie dans le secret du dépôt. Hors GitHub Actions, on se contente d'avertir.
+    """
+    print(f"::add-mask::{jeton}")
+    chemin = os.environ.get("INOREADER_NOUVEAU_JETON_FICHIER")
+    if not chemin:
+        print("::warning::Inoreader a émis un nouveau refresh_token, non mémorisé (pas de fichier cible).")
+        return
+    fichier = Path(chemin)
+    fichier.write_text(jeton, encoding="utf-8")
+    fichier.chmod(0o600)
 
 
 def collecter(config: dict, depuis: date) -> list[Item]:

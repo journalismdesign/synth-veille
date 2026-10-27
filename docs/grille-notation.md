@@ -23,6 +23,18 @@ Utilisée par l'agent `trieur` (note provisoire) puis corrigée par `verificateu
 - **+2** : 5 sources ou plus. La résonance signale un sujet structurant, pas un buzz : un
   sujet repris partout mais sans enjeu de pouvoir reste mal noté.
 
+## Bonus de proximité (règle S-04, mort-kilomètre)
+
+Propriété Notion `Échelle`, renseignée par le `trieur` d'après le lieu de l'enjeu (pas la
+langue de la source : un article anglophone sur la France est « France »).
+
+- **+2** : France (y compris outre-mer, et acteurs étrangers agissant en France).
+- **+1** : Europe et espace francophone (UE, Conseil de l'Europe, Suisse, Belgique, Afrique francophone, Québec).
+- **+0** : International.
+
+Le bonus départage, il ne rattrape pas un sujet faible : un sujet français sans enjeu de
+pouvoir reste mal noté.
+
 ## Malus
 
 - **−3** : annonce d'entreprise ou communiqué sans effet observable (le « discours industriel » n'est pas un fait).
@@ -42,5 +54,7 @@ Utilisée par l'agent `trieur` (note provisoire) puis corrigée par `verificateu
 - Au moins 2 candidats adossés à une étude ou un preprint.
 - Pas plus de 3 sujets sur la même entreprise.
 - Au moins 1 sujet européen ou français.
+- Top 5 proposé à Gerald : sujets « France » d'abord, puis « Europe », puis « International »,
+  chaque groupe trié par score [S-04].
 
 La note justifie, elle ne décide pas : la sélection finale reste celle de Gerald.

@@ -45,8 +45,10 @@ Semaine : numéro ISO de la semaine **suivante** (ex. « 2026-S44 ») si on est 
    adosse les sujets, elle ne les remplace pas. Passe-les en `Statut = Candidat`, `Semaine = <semaine>`.
    Couvre au moins quatre `Besoin` différents [D-01] et examine en priorité les sujets de
    `Résonance` ≥ 3 [S-03].
-   Propose (sans changer leur statut) les 5 meilleurs pour la newsletter et 1 à 2 pour
-   l'article.
+   Propose (sans changer leur statut) un **top 5** et **5 autres propositions**, chacun
+   avec sa destination (NL ou Insta), et 1 à 2 candidats article. Ordonne le top 5 par
+   mort-kilomètre [S-04] : `Échelle` France d'abord, puis Europe, puis International,
+   chaque groupe par score. Les sujets internationaux vont de préférence dans les 5 autres.
 
 6. **Page de sélection.** Crée sous la page NEWSROOM la page
    « Sélection <semaine> » contenant :
@@ -56,9 +58,27 @@ Semaine : numéro ISO de la semaine **suivante** (ex. « 2026-S44 ») si on est 
    - ta proposition argumentée (une ligne par sujet : pourquoi, axe, origine, étude associée) ;
    - un bloc « Écartés notables » : 3 sujets très repris ailleurs mais écartés, et pourquoi.
 
-7. **Compte rendu.** Termine par : nombre de fiches collectées / triées / vérifiées,
+7. **Diffusion interne de la proposition** (identifiants : `config/veille.toml`,
+   sections `[notion]` et `[diffusion]`).
+   - **Courriel** à `courriel_redaction`, en HTML sobre (noir, blanc, accent #00E6CC,
+     IBM Plex Mono) avec une version texte : objet « Veille Synth S<n> — top 5 + 5
+     propositions · choix <jour> » ; pour chaque sujet, rang, destination, échelle, score,
+     deux lignes d'angle (qui décide, qui est exposé), ce qui reste à vérifier, liens vers
+     les sources. Rappelle l'échéancier : choix jeudi midi, publication vendredi après-midi.
+     Les faits non vérifiés sont présentés comme tels (« selon… », « à vérifier »).
+   - **Encart** dans la page « Aujourd'hui » (`page_aujourdhui`) : un callout au-dessus de
+     « 01 — Aujourd'hui » listant les 5 sujets du top, leur destination et leur source.
+     Remplace l'encart de la semaine précédente au lieu d'en empiler un nouveau.
+   - **Carte newsletter** : dans Production Synth (`data_source_production`), la carte
+     `Canal = Newsletter` dont la date de publication est le prochain vendredi ; pose le
+     sommaire provisoire (5 brèves : angle, source, points à vérifier) et une section
+     « En réserve ». Ne change ni son `Statut` ni sa date ; si la date ne tombe pas un
+     vendredi, signale-le dans `Notes`. Les sujets Insta du top vont dans une carte
+     `Canal = Instagram` de la même semaine si elle existe, sinon signale-le.
+
+8. **Compte rendu.** Termine par : nombre de fiches collectées / triées / vérifiées,
    lien vers la page de sélection, problèmes rencontrés (sources en panne, fiches illisibles).
 
 ## Garde-fous
 - Ne passe jamais toi-même une fiche en « Retenu NL » ou « Retenu article » : c'est la décision de Gerald.
-- Ne publie rien hors de Notion.
+- Ne publie rien hors de Notion. Le courriel à la rédaction (étape 7) est interne et n'est pas une publication.

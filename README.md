@@ -27,9 +27,11 @@ Instagram ─┘  (partage → Notion)          │
 | Chaque matin, 9 h | Veille web (rapports, enquêtes, études) déposée dans Notion, `Canal = Veille quotidienne` | Tâche planifiée « SYNTH \| Veille » |
 | En continu | Partage des posts Instagram vers Notion | Gerald (5 s/post) |
 | Dimanche soir | `/veille-hebdo` → page « Sélection semaine N » | Tâche planifiée Claude |
-| Lundi matin | Cocher 5 « Retenu NL » + 1–2 « Retenu article » | Gerald |
-| Lundi | `/redaction-hebdo` → brouillons | Claude |
-| Lundi–mardi | Relecture, publication | Gerald |
+| Dimanche soir | Courriel top 5 + 5 propositions à la rédaction, encart « Aujourd'hui », sommaire dans la carte NL | Claude |
+| Jusqu'à jeudi midi | Cocher 5 « Retenu NL » + 1–2 « Retenu article » | Gerald |
+| Jeudi après-midi | `/redaction-hebdo` → brouillons | Claude |
+| Vendredi matin | Relecture | Gerald |
+| Vendredi après-midi | Publication newsletter et Instagram (pour le week-end) | Gerald |
 
 ## Mise en route
 
@@ -41,6 +43,10 @@ Instagram ─┘  (partage → Notion)          │
    sur votre machine (voir l'en-tête du fichier). Secrets : `INOREADER_APP_ID`,
    `INOREADER_APP_KEY`, `INOREADER_REFRESH_TOKEN`. Créer le tag **Synth** dans Inoreader.
    L'accès API dépend de votre offre Inoreader : à vérifier sur la page développeurs.
+   Inoreader renouvelle ce jeton à chaque connexion : le workflow l'enregistre lui-même,
+   à condition de lui donner le secret `GH_SECRETS_PAT` — un jeton GitHub *fine-grained*
+   (https://github.com/settings/personal-access-tokens/new), limité au seul dépôt
+   `synth-veille`, permission **Secrets : Read and write**, aucune autre.
 3. **GitHub** — ajouter les secrets (Settings → Secrets and variables → Actions), puis lancer
    le workflow « Collecte veille » à la main une première fois avec `depuis = 14`.
 4. **Instagram** — voir `docs/instagram.md`.
