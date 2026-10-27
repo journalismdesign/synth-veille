@@ -12,6 +12,10 @@ Semaine : numéro ISO de la semaine **suivante** (ex. « 2026-S44 ») si on est 
 
 ## Étapes
 
+0. **Charte.** Exécute `python -m veille.charte` et applique ces règles en prémisse.
+   Le radar (`python -m veille.radar`) a tourné après la dernière collecte : la propriété
+   `Résonance` indique combien de sources indépendantes traitent chaque sujet [S-03].
+
 1. **Inventaire.** Interroge la data source Veille Synth : fiches `Statut = Collecté`
    ajoutées depuis 8 jours, triées par `Origine` puis `Pré-score` décroissant.
    Compte-les par origine (1 · Sauvé, 2 · Flux Inoreader, 3 · Académique).
@@ -35,6 +39,8 @@ Semaine : numéro ISO de la semaine **suivante** (ex. « 2026-S44 ») si on est 
 5. **Sélection.** Retiens 10 candidats selon les seuils et la règle d'équilibre de la
    grille, dont **au moins 7 issus d'Inoreader** (Sauvé ou Flux) : la recherche académique
    adosse les sujets, elle ne les remplace pas. Passe-les en `Statut = Candidat`, `Semaine = <semaine>`.
+   Couvre au moins quatre `Besoin` différents [D-01] et examine en priorité les sujets de
+   `Résonance` ≥ 3 [S-03].
    Propose (sans changer leur statut) les 5 meilleurs pour la newsletter et 1 à 2 pour
    l'article.
 

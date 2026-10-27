@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import os
 import time
+from datetime import date, timedelta
 
 import requests
 
@@ -38,6 +39,24 @@ class Notion:
             r.raise_for_status()
             return r.json()
         raise RuntimeError(f"Notion : trop de requêtes refusées sur {chemin}")
+
+    def pages_recentes(self, jours: int) -> list[dict]:
+        """Fiches ajoutées depuis `jours` jours (pour le radar)."""
+        depuis = (date.today() - timedelta(days=jours)).isoformat()
+        pages, curseur = [], None
+        while True:
+            corps = {"page_size": 100,
+                     "filter": {"timestamp": "created_time", "created_time": {"on_or_after": depuis}},
+                     **({"start_cursor": curseur} if curseur else {})}
+            res = self._requete("POST", f"/databases/{self.base_id}/query", json=corps)
+            pages += res.get("results", [])
+            if not res.get("has_more"):
+                return pages
+            curseur = res["next_cursor"]
+
+    def maj(self, page_id: str, proprietes: dict) -> None:
+        self._requete("PATCH", f"/pages/{page_id}", json={"properties": proprietes})
+        time.sleep(0.35)
 
     def _index(self) -> dict[str, tuple[str, str]]:
         """Charge une fois toutes les fiches : empreinte -> (id de page, origine).

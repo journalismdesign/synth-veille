@@ -17,13 +17,18 @@ description: Après validation de la sélection par Gerald, produit la newslette
 
 3. **Mise en forme.** Quand la sous-page « Carrousels » existe, lance `metteur-en-forme`.
 
-4. **Contrôle final** (toi-même) :
+4. **Contrôle final** (toi-même) — relance pour chaque livrable `python -m veille.preuves`
+   (avec `--texte`) et `python -m veille.relecture` ; aucun écart bloquant ne doit subsister :
    - compte de signes de l'article dans la fourchette 2 700–3 300 ;
    - chaque brève a au moins un lien ;
    - aucune citation sans source ;
    - section « Points faibles » présente.
    Corrige ou fais corriger ce qui ne passe pas.
 
-5. **Compte rendu.** Liens vers chaque sous-page et chaque design Canva, puis ce qu'il
+5. **Mesure de curation.** Indique : fiches collectées, triées, candidates, retenues,
+   publiées ; part écartée ; nombre de pistes d'action créées. Ce ratio est le coût réel
+   du jugement éditorial, à suivre semaine après semaine.
+
+6. **Compte rendu.** Liens vers chaque sous-page et chaque design Canva, puis ce qu'il
    reste à faire à la main : coller la newsletter dans Heddo, importer l'article dans
    WordPress (tant que le connecteur WordPress n'est pas configuré), publier les carrousels.

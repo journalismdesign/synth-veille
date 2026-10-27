@@ -1,0 +1,253 @@
+# Charte éditoriale codée de Synth — source unique de vérité.
+#
+# Chaque règle porte un identifiant stable (famille-numéro). Les agents la chargent en
+# prémisse de chaque tâche ; `python -m veille.relecture` contrôle automatiquement les
+# règles marquées controle = "auto" ; `python -m veille.preuves` contrôle la famille F.
+# Toute modification est consignée dans docs/journal-charte.md (règle P-03).
+#
+# controle : "auto" (vérifié par le code), "agent" (vérifié par un agent), "humain" (Gerald)
+# severite : "bloquant" (le contenu ne sort pas), "alerte" (signalé, décision humaine)
+
+version = "1.0.0"
+
+# ─── P : principes de fonctionnement ──────────────────────────────────────────
+
+[[regle]]
+id = "P-01"
+famille = "Principes"
+texte = "La machine collecte, filtre, analyse et propose. Gerald valide et publie. Jamais l'inverse."
+controle = "humain"
+severite = "bloquant"
+
+[[regle]]
+id = "P-02"
+famille = "Principes"
+texte = "Rien ne sort de Notion ni des brouillons Canva sans validation manuelle explicite."
+controle = "humain"
+severite = "bloquant"
+
+[[regle]]
+id = "P-03"
+famille = "Principes"
+texte = "Une erreur publiée ou interceptée se corrige à la source : on identifie la règle qui l'a laissée passer, on l'amende et on consigne l'amendement dans le journal de la charte (/corriger-regle)."
+controle = "humain"
+severite = "bloquant"
+
+[[regle]]
+id = "P-04"
+famille = "Principes"
+texte = "La curation des sources est humaine (abonnements Inoreader, sauvegardes) ; le préfiltrage automatique est un garde-fou, pas une décision."
+controle = "humain"
+severite = "alerte"
+
+# ─── F : faits et preuves ─────────────────────────────────────────────────────
+
+[[regle]]
+id = "F-01"
+famille = "Faits"
+texte = "Aucune ligne de prose avant un tableau de preuves validé : chaque affirmation y est typée, sourcée et statuée, puis appelée dans le texte par son identifiant [Pn]."
+controle = "auto"
+severite = "bloquant"
+
+[[regle]]
+id = "F-02"
+famille = "Faits"
+texte = "Chaque affirmation porte un type explicite : Fait établi, Hypothèse, Projection, Discours industriel ou Opinion."
+controle = "auto"
+severite = "bloquant"
+
+[[regle]]
+id = "F-03"
+famille = "Faits"
+texte = "Un « Fait établi » a une source primaire accessible et un statut « vérifié »."
+controle = "auto"
+severite = "bloquant"
+
+[[regle]]
+id = "F-04"
+famille = "Faits"
+texte = "Un discours industriel n'est jamais présenté comme un fait : il est attribué (« selon X ») et confronté aux intérêts et aux effets observables."
+controle = "agent"
+severite = "bloquant"
+
+[[regle]]
+id = "F-05"
+famille = "Faits"
+texte = "Toute citation entre guillemets est vérifiée mot pour mot dans sa source ; jamais de citation reconstituée."
+controle = "agent"
+severite = "bloquant"
+
+[[regle]]
+id = "F-06"
+famille = "Faits"
+texte = "Un chiffre est accompagné de sa source, de sa date et de son périmètre."
+controle = "agent"
+severite = "alerte"
+
+[[regle]]
+id = "F-07"
+famille = "Faits"
+texte = "Un preprint est signalé comme tel ; les limites méthodologiques importantes sont mentionnées."
+controle = "agent"
+severite = "alerte"
+
+[[regle]]
+id = "F-08"
+famille = "Faits"
+texte = "Pas de faux équilibre : un désaccord est représenté à proportion de la solidité des preuves."
+controle = "agent"
+severite = "alerte"
+
+# ─── Q : prismes structurels (questions réflexes) ─────────────────────────────
+# Ce ne sont pas des catégories d'opinion : ils s'appliquent à chaque contenu.
+
+[[regle]]
+id = "Q-01"
+famille = "Prismes"
+texte = "Chaque contenu de fond répond explicitement à au moins quatre questions réflexes, dont obligatoirement « qui bénéficie ? » et « qui paie ? » : qui décide, possède, finance, bénéficie, paie, travaille, est exposé, est absent du récit, quelles alternatives, quels intérêts structurent la présentation du sujet."
+controle = "agent"
+severite = "bloquant"
+
+[[regle]]
+id = "Q-02"
+famille = "Prismes"
+texte = "Chaque article site propose au moins une piste d'action documentée (acteurs, mécanisme, signal de réussite), versée dans la base « Pistes d'action Synth »."
+controle = "agent"
+severite = "alerte"
+
+# ─── E : écriture ─────────────────────────────────────────────────────────────
+
+[[regle]]
+id = "E-01"
+famille = "Écriture"
+texte = "Pas de triptyques systématiques (énumérations en trois termes à répétition)."
+controle = "auto"
+severite = "alerte"
+
+[[regle]]
+id = "E-02"
+famille = "Écriture"
+texte = "Pas d'antithèses mécaniques « non pas X mais Y » / « ce n'est pas X, c'est Y »."
+controle = "auto"
+severite = "alerte"
+
+[[regle]]
+id = "E-03"
+famille = "Écriture"
+texte = "Pas de formules creuses ni de transitions mécaniques."
+controle = "auto"
+severite = "alerte"
+
+[[regle]]
+id = "E-04"
+famille = "Écriture"
+texte = "Pas de superlatifs vides : un adjectif d'intensité doit être démontré par un fait."
+controle = "auto"
+severite = "alerte"
+
+[[regle]]
+id = "E-05"
+famille = "Écriture"
+texte = "Pas de jargon qui se déguise en analyse."
+controle = "auto"
+severite = "alerte"
+
+[[regle]]
+id = "E-06"
+famille = "Écriture"
+texte = "Pas de questions rhétoriques en cascade (au plus deux par paragraphe)."
+controle = "auto"
+severite = "alerte"
+
+[[regle]]
+id = "E-07"
+famille = "Écriture"
+texte = "Écriture inclusive au point médian dans les textes Synth (lecteur·ices, chercheur·euses)."
+controle = "auto"
+severite = "alerte"
+
+[[regle]]
+id = "E-08"
+famille = "Écriture"
+texte = "Pas de listes à puces dans la prose destinée à publication (hors encadré Sources)."
+controle = "auto"
+severite = "alerte"
+
+[[regle]]
+id = "E-09"
+famille = "Écriture"
+texte = "Article site : 3 000 signes ± 10 % (2 feuillets)."
+controle = "auto"
+severite = "bloquant"
+
+# ─── S : sélection ────────────────────────────────────────────────────────────
+
+[[regle]]
+id = "S-01"
+famille = "Sélection"
+texte = "Barème et seuils de docs/grille-notation.md ; en dessous du seuil, un sujet ne sort pas."
+controle = "agent"
+severite = "bloquant"
+
+[[regle]]
+id = "S-02"
+famille = "Sélection"
+texte = "Au moins 7 candidats hebdomadaires sur 10 viennent d'Inoreader (sauvés ou flux)."
+controle = "agent"
+severite = "alerte"
+
+[[regle]]
+id = "S-03"
+famille = "Sélection"
+texte = "Un sujet repris par plusieurs sources indépendantes (Résonance ≥ 3) est examiné en priorité : ni le plus bruyant, ni le plus récent, celui qui revient de plusieurs endroits."
+controle = "agent"
+severite = "alerte"
+
+# ─── D : distribution ─────────────────────────────────────────────────────────
+
+[[regle]]
+id = "D-01"
+famille = "Distribution"
+texte = "Le besoin du lecteur·ice (boussole des besoins) détermine le format, le gabarit, le canal et la profondeur."
+controle = "agent"
+severite = "alerte"
+
+[[regle]]
+id = "D-02"
+famille = "Distribution"
+texte = "Pas de cross-posting : chaque canal reçoit un texte écrit pour lui. Les réseaux donnent la surface (l'angle, le fait, la question), le site la profondeur (analyse, contexte, pistes)."
+controle = "agent"
+severite = "alerte"
+
+# ─── Lexique contrôlé automatiquement ─────────────────────────────────────────
+# motif : expression régulière Python, insensible à la casse.
+
+[[lexique]]
+regle = "E-02"
+severite = "alerte"
+motifs = ["\\bnon pas\\b[^.!?]{0,80}\\bmais\\b", "ce n['’]est pas\\b[^.!?]{0,60}, c['’]est\\b", "\\bil ne s['’]agit pas\\b[^.!?]{0,80}\\bmais\\b"]
+
+[[lexique]]
+regle = "E-03"
+severite = "alerte"
+motifs = ["à l[’']heure où", "plus que jamais", "dans un monde où", "force est de constater", "il est important de (noter|souligner)", "il convient de (noter|souligner)", '\ben somme\b', '\ben définitive\b', "nul doute que", "à n[’']en pas douter", "pierre angulaire", "à l[’']ère d[eu]", "dans le paysage", '\bplong(eons|er) dans\b', "sans plus attendre", "au cœur des enjeux", "véritable enjeu", "il va sans dire"]
+
+[[lexique]]
+regle = "E-03"
+severite = "bloquant"
+motifs = ["change la donne", "game.?changer", "véritable révolution", "rebattre les cartes", "nouvelle ère"]
+
+[[lexique]]
+regle = "E-04"
+severite = "alerte"
+motifs = ['\brévolutionnaire', '\bsans précédent\b', '\bincontournable', '\bspectaculaire', '\bfulgurant', '\bphénoménal', '\bincroyable', '\bextraordinaire', '\bmajeur(e|s|es)?\b', '\bcrucial(e|es|aux)?\b']
+
+[[lexique]]
+regle = "E-05"
+severite = "alerte"
+motifs = ['\bdisrupt', '\bsynergie', '\bscalab', '\bimpactant', '\bsolutionner\b', '\bbest practices?\b', '\bparadigme\b', '\blevier(s)? de croissance\b', '\bholistique\b']
+
+# Masculins pluriels qui appellent le point médian (E-07)
+[inclusif]
+regle = "E-07"
+mots = ["lecteurs", "utilisateurs", "travailleurs", "chercheurs", "citoyens", "salariés", "développeurs", "ingénieurs", "créateurs", "auteurs", "électeurs", "consommateurs", "abonnés", "usagers", "employés", "habitants", "militants", "experts"]

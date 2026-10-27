@@ -17,6 +17,12 @@ Utilisée par l'agent `trieur` (note provisoire) puis corrigée par `verificateu
 - **+2** : article sauvé par Gerald (Origine « 1 · Sauvé »). Ce choix humain vaut indice de pertinence.
 - **+0** : flux Inoreader. **+0** : académique (son rôle premier est d'adosser un sujet d'actualité).
 
+## Bonus de résonance (règle S-03)
+
+- **+1** : sujet traité par 3 à 4 sources indépendantes dans la semaine (`Résonance`).
+- **+2** : 5 sources ou plus. La résonance signale un sujet structurant, pas un buzz : un
+  sujet repris partout mais sans enjeu de pouvoir reste mal noté.
+
 ## Malus
 
 - **−3** : annonce d'entreprise ou communiqué sans effet observable (le « discours industriel » n'est pas un fait).
