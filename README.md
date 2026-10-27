@@ -5,7 +5,7 @@ Instagram) à la sélection hebdomadaire de 10 sujets, puis aux livrables — 5 
 newsletter, un article de 3 000 signes, des carrousels Instagram, un post LinkedIn.
 
 ```
-Inoreader ─┐
+Inoreader ─┐  (1 · sauvés, 2 · flux complet filtré)
 OpenAlex  ─┤                          ┌─ trieur (×n, parallèle)
 arXiv     ─┤  GitHub Actions /6 h     │
 HAL       ─┼──────────────────────▶ Notion ── /veille-hebdo ──┼─ verificateur (×3)
@@ -59,6 +59,29 @@ pip install -r requirements.txt
 pytest -q
 python -m veille.collecte --sources openalex,arxiv,hal --depuis 7 --sec   # aperçu sans écrire
 ```
+
+## Charte codée
+
+Méthode inspirée de Damien Van Achter (« Pourquoi et comment j'ai codé ma ligne
+éditoriale », da.van.ac, 2026), adaptée à Synth.
+
+| Élément | Où | Rôle |
+|---|---|---|
+| Charte (28 règles identifiées) | `charte/charte.toml` | Source unique de la ligne éditoriale, chargée en prémisse par chaque agent (`python -m veille.charte`) |
+| Protocole de preuves | `veille/preuves.py` | Aucune prose sans tableau de preuves valide ; chaque affirmation typée, sourcée, statuée, appelée [Pn] |
+| Relecture | `veille/relecture.py` | Lexique interdit, point médian, puces, questions en cascade, volume ; code retour 1 si bloquant |
+| Radar | `veille/radar.py` | Résonance = nombre de sources indépendantes sur un même sujet (après chaque collecte) |
+| Boussole des besoins | `docs/boussole-besoins.md` + propriété Notion « Besoin » | Le besoin décide du format et du canal |
+| Pistes d'action | base Notion « Pistes d'action Synth » | Acteurs, mécanisme, signal de réussite |
+| Correction à la règle | `/corriger-regle` + `docs/journal-charte.md` | Une erreur amende la règle, versionnée et motivée |
+| Note publique | `docs/note-methodologique.md` | Brouillon de transparence pour synthmedia.fr |
+
+## Lire la semaine dans Notion
+
+- **« Cette semaine »** : les 30 fiches les plus intéressantes des 7 derniers jours (case
+  « Top semaine », recalculée après chaque collecte par `python -m veille.top`). Les fiches
+  retenues par Gerald passent en tête, puis Score, Résonance, Pré-score.
+- **« Toutes les fiches (par score) »** (vue par défaut) : tout le reste, même ordre.
 
 ## Réglages
 

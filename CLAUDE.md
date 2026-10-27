@@ -11,6 +11,12 @@ Chaîne de veille éditoriale de Synth (synthmedia.fr), média indépendant tech
   Aucun agent ne prend cette décision à sa place, et rien n'est publié hors de Notion et
   des brouillons Canva.
 
+**Charte codée** : `charte/charte.toml` est la source de vérité de la ligne éditoriale
+(règles identifiées P-, F-, Q-, E-, S-, D-). Tout agent la charge en prémisse
+(`python -m veille.charte`). Contrôles automatiques : `python -m veille.preuves` (protocole
+bloquant des preuves) et `python -m veille.relecture` (écriture, volume). Une erreur se
+corrige dans la règle (`/corriger-regle`) et se consigne dans `docs/journal-charte.md`.
+
 Référentiels à respecter : page Notion « Positionnement de Synth et de notre journalisme »,
 `docs/grille-notation.md`, `docs/gabarits.md`.
 

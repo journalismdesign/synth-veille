@@ -12,22 +12,35 @@ Semaine : numéro ISO de la semaine **suivante** (ex. « 2026-S44 ») si on est 
 
 ## Étapes
 
+0. **Charte.** Exécute `python -m veille.charte` et applique ces règles en prémisse.
+   Le radar (`python -m veille.radar`) a tourné après la dernière collecte : la propriété
+   `Résonance` indique combien de sources indépendantes traitent chaque sujet [S-03].
+
 1. **Inventaire.** Interroge la data source Veille Synth : fiches `Statut = Collecté`
-   ajoutées depuis 8 jours. Si 0 fiche : vérifie le dernier run GitHub Actions
-   « Collecte veille » et signale le problème au lieu de continuer.
+   ajoutées depuis 8 jours, triées par `Origine` puis `Pré-score` décroissant.
+   Compte-les par origine (1 · Sauvé, 2 · Flux Inoreader, 3 · Académique).
+   Si 0 fiche Inoreader : vérifie le dernier run GitHub Actions « Collecte veille »
+   et signale le problème avant de continuer.
 
-2. **Tri.** Découpe en lots de 40 et lance un sous-agent `trieur` par lot, **en parallèle**.
-   Chaque lot reçoit la liste des URL de fiches.
+2. **Tri, dans l'ordre de priorité.** Lots de 40, un sous-agent `trieur` par lot, en parallèle :
+   - d'abord **toutes** les fiches « 1 · Sauvé » (Gerald les a choisies) ;
+   - puis **toutes** les fiches « 2 · Flux Inoreader » ;
+   - enfin les fiches « 3 · Académique », limitées aux 40 meilleurs `Pré-score`.
+     Les autres restent « Collecté » : elles servent de réservoir au `chercheur`.
 
-3. **Vérification.** Prends les 15 meilleures fiches `Trié` (score décroissant, en
-   respectant l'équilibre de `docs/grille-notation.md`). Répartis-les entre 3 sous-agents
-   `verificateur` en parallèle.
+3. **Vérification.** Prends les 15 meilleures fiches `Trié` issues d'Inoreader
+   (Sauvé et Flux), plus au plus 3 fiches académiques si leur score ≥ 16. Répartis-les
+   entre 3 sous-agents `verificateur` en parallèle.
 
-4. **Recherche.** Sur les fiches non écartées à l'étape 3, lance 2 sous-agents `chercheur`
-   en parallèle (moitié chacun).
+4. **Recherche.** Sur les fiches Inoreader non écartées à l'étape 3, lance 2 sous-agents
+   `chercheur` en parallèle (moitié chacun). Ils cherchent l'étude associée **d'abord
+   parmi les fiches « 3 · Académique » de la base**, puis sur le web.
 
 5. **Sélection.** Retiens 10 candidats selon les seuils et la règle d'équilibre de la
-   grille. Passe-les en `Statut = Candidat`, `Semaine = <semaine>`.
+   grille, dont **au moins 7 issus d'Inoreader** (Sauvé ou Flux) : la recherche académique
+   adosse les sujets, elle ne les remplace pas. Passe-les en `Statut = Candidat`, `Semaine = <semaine>`.
+   Couvre au moins quatre `Besoin` différents [D-01] et examine en priorité les sujets de
+   `Résonance` ≥ 3 [S-03].
    Propose (sans changer leur statut) les 5 meilleurs pour la newsletter et 1 à 2 pour
    l'article.
 
@@ -36,7 +49,7 @@ Semaine : numéro ISO de la semaine **suivante** (ex. « 2026-S44 ») si on est 
    - un mode d'emploi en 2 lignes : « Passer 5 fiches en *Retenu NL* et 1–2 en
      *Retenu article* dans la vue ci-dessous, puis lancer /redaction-hebdo » ;
    - une vue de la base filtrée sur `Semaine = <semaine>` et `Statut` ∈ {Candidat, Retenu NL, Retenu article}, triée par score ;
-   - ta proposition argumentée (une ligne par sujet : pourquoi, axe, étude associée) ;
+   - ta proposition argumentée (une ligne par sujet : pourquoi, axe, origine, étude associée) ;
    - un bloc « Écartés notables » : 3 sujets très repris ailleurs mais écartés, et pourquoi.
 
 7. **Compte rendu.** Termine par : nombre de fiches collectées / triées / vérifiées,

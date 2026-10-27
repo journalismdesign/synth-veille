@@ -74,3 +74,15 @@ jobs:
           gh secret set INOREADER_REFRESH_TOKEN --repo "$GITHUB_REPOSITORY" < "$FICHIER"
           rm -f "$FICHIER"
           echo "Secret INOREADER_REFRESH_TOKEN mis à jour."
+
+      - name: Radar de résonance
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+        run: python -m veille.radar --jours 7
+
+      - name: Top de la semaine
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+        run: python -m veille.top -n 30
