@@ -59,9 +59,9 @@ def test_preuves_coherence_texte_et_nettoyage(tmp_path):
     assert preuves.nettoyer("Constat [P1] et suite.") == "Constat et suite."
 
 
-def _fiche(titre, url):
+def _fiche(titre, url, source=""):
     return {"id": url, "titre": titre, "termes": radar.termes(titre),
-            "noms": radar.noms_propres(titre), "domaine": radar.domaine(url)}
+            "noms": radar.noms_propres(titre), "domaine": radar.domaine(url), "source": source}
 
 
 def test_radar_regroupe_un_meme_sujet_multi_sources():
@@ -84,3 +84,15 @@ def test_top_semaine_retenus_puis_score_puis_resonance():
               f("haut", score=18), f("egal-resonant", score=15, res=4), f("egal", score=15)]
     assert [x["id"] for x in classer(fiches, 4)] == ["retenu", "haut", "egal-resonant", "egal"]
     assert "ecarte" not in [x["id"] for x in classer(fiches, 10)]
+
+
+def test_radar_ignore_les_url_et_compte_les_sources_pas_les_posts():
+    # Cas réel du 27/10 : les posts Bluesky de 404 Media s'agrégeaient via « https www 404media »
+    a = _fiche("Texas suspends 17 data center permits https://www.404media.co/x", "https://bsky.app/1", "404 Media")
+    b = _fiche("Sick of AI slop posters? https://www.404media.co/y", "https://bsky.app/2", "404 Media")
+    assert radar.grouper([a, b]) == []
+    c = _fiche("Google says it might use your Gmail data to target ads", "https://theverge.com/a", "The Verge")
+    d = _fiche("Google privacy policy says your Gmail might be used for ads", "https://arstechnica.com/b", "Ars Technica")
+    e = _fiche("Gmail might be used for ads, Google says", "https://bsky.app/3", "The Verge")
+    (groupe,) = radar.grouper([c, d, e])
+    assert radar.resonance(groupe) == 2   # The Verge compté une fois
