@@ -11,7 +11,7 @@ from datetime import date, timedelta
 
 import requests
 
-from .modele import SAUVE, Item
+from .modele import SAUVE, Item, empreinte_url
 
 API = "https://api.notion.com/v1"
 VERSION = "2022-06-28"
@@ -75,6 +75,10 @@ class Notion:
                     p = page["properties"]
                     emp = "".join(x["plain_text"] for x in p.get("Empreinte", {}).get("rich_text", []))
                     origine = ((p.get("Origine") or {}).get("select") or {}).get("name", "")
+                    # Fiches créées hors collecte (veille quotidienne, ajout manuel) : sans
+                    # empreinte, on la recalcule depuis l'URL pour ne pas créer de doublon
+                    url = (p.get("URL") or {}).get("url") or ""
+                    emp = emp or (empreinte_url(url) if url else "")
                     if emp:
                         self._cache[emp] = (page["id"], origine)
                 if not res.get("has_more"):

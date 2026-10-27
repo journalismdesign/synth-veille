@@ -134,3 +134,15 @@ def test_notion_promeut_un_article_sauve_apres_coup(monkeypatch):
     assert n.ajouter(it) == "promu"
     assert appels == [("PATCH", "/pages/page-1", {"json": {"properties": {"Origine": {"select": {"name": SAUVE}}}}})]
     assert n.ajouter(it) == "existe"
+
+
+def test_notion_reconnait_une_fiche_sans_empreinte(monkeypatch):
+    # Une fiche déposée par la veille quotidienne n'a pas d'empreinte : la collecte ne
+    # doit pas la recréer quand le même article arrive par Inoreader
+    from veille.notion import Notion
+    n = Notion(jeton="x", base_id="base")
+    page = {"id": "page-2", "properties": {
+        "URL": {"url": "https://www.a.fr/article/"},
+        "Origine": {"select": {"name": "4 · Autre"}}}}
+    monkeypatch.setattr(n, "_requete", lambda *a, **k: {"results": [page], "has_more": False})
+    assert n.ajouter(Item("Titre", "https://a.fr/article?utm_source=x", "Inoreader")) == "existe"
