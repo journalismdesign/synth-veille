@@ -74,3 +74,13 @@ def test_radar_regroupe_un_meme_sujet_multi_sources():
     groupes = radar.grouper(fiches)
     assert len(groupes) == 1 and len(groupes[0]) == 3
     assert radar.resonance(groupes[0]) == 2   # deux domaines distincts, pas trois
+
+
+def test_top_semaine_retenus_puis_score_puis_resonance():
+    from veille.top import classer
+    f = lambda i, statut="Trié", score=None, res=0, pre=0: {
+        "id": i, "titre": i, "statut": statut, "score": score, "resonance": res, "prescore": pre, "top": False}
+    fiches = [f("non-note", pre=9), f("ecarte", "Écarté", 20), f("retenu", "Retenu NL", 11),
+              f("haut", score=18), f("egal-resonant", score=15, res=4), f("egal", score=15)]
+    assert [x["id"] for x in classer(fiches, 4)] == ["retenu", "haut", "egal-resonant", "egal"]
+    assert "ecarte" not in [x["id"] for x in classer(fiches, 10)]
