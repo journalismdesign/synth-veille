@@ -46,6 +46,11 @@ def selectionner(items: list[Item], config: dict) -> list[Item]:
     return retenus
 
 
+def est_bloquant(echecs: list[str], sources: list[str]) -> bool:
+    """Échec bloquant : Inoreader (source prioritaire) ou toutes les sources en panne."""
+    return "inoreader" in echecs or (bool(sources) and set(sources) <= set(echecs))
+
+
 def main() -> int:
     p = argparse.ArgumentParser(description="Collecte de veille Synth vers Notion")
     p.add_argument("--sources", default=",".join(SOURCES), help="liste séparée par des virgules")
@@ -59,14 +64,16 @@ def main() -> int:
 
     items: list[Item] = []
     echecs = []
-    for nom in [s.strip() for s in args.sources.split(",") if s.strip()]:
+    sources = [s.strip() for s in args.sources.split(",") if s.strip()]
+    for nom in sources:
         try:
             recus = SOURCES[nom].collecter(config, depuis)
             print(f"{nom} : {len(recus)} éléments")
             items += recus
         except Exception as e:  # une source cassée ne doit pas bloquer les autres
             echecs.append(nom)
-            print(f"::error::{nom} : {e}", file=sys.stderr)
+            niveau = "error" if est_bloquant([nom], sources) else "warning"
+            print(f"::{niveau}::{nom} : {e}", file=sys.stderr)
     if args.instagram:
         items += instagram.collecter_export(args.instagram, depuis)
 
@@ -82,7 +89,8 @@ def main() -> int:
         bilan = [notion.ajouter(it) for it in retenus]
         print(f"Notion : {bilan.count('cree')} nouvelles fiches, {bilan.count('promu')} promues en « Sauvé »")
 
-    return 1 if echecs else 0
+    # Un délai dépassé chez arXiv ne doit pas faire échouer le run ni sauter radar et top
+    return 1 if est_bloquant(echecs, sources) else 0
 
 
 if __name__ == "__main__":

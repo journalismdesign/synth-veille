@@ -25,6 +25,10 @@ Semaine : numéro ISO de la semaine **suivante** (ex. « 2026-S44 ») si on est 
 2. **Tri, dans l'ordre de priorité.** Lots de 40, un sous-agent `trieur` par lot, en parallèle :
    - d'abord **toutes** les fiches « 1 · Sauvé » (Gerald les a choisies) ;
    - puis **toutes** les fiches « 2 · Flux Inoreader » ;
+   - puis **toutes** les fiches `Canal = Veille quotidienne` (Origine « 4 · Autre ») :
+     la tâche planifiée « SYNTH | Veille » en dépose 5 à 8 par jour, déjà présélectionnées,
+     avec un niveau (« À lire absolument », « À parcourir », « À garder en radar ») en tête
+     du résumé ;
    - enfin les fiches « 3 · Académique », limitées aux 40 meilleurs `Pré-score`.
      Les autres restent « Collecté » : elles servent de réservoir au `chercheur`.
 

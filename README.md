@@ -24,6 +24,7 @@ Instagram ─┘  (partage → Notion)          │
 | Quand | Quoi | Qui |
 |---|---|---|
 | En continu | Collecte vers Notion | GitHub Actions |
+| Chaque matin, 9 h | Veille web (rapports, enquêtes, études) déposée dans Notion, `Canal = Veille quotidienne` | Tâche planifiée « SYNTH \| Veille » |
 | En continu | Partage des posts Instagram vers Notion | Gerald (5 s/post) |
 | Dimanche soir | `/veille-hebdo` → page « Sélection semaine N » | Tâche planifiée Claude |
 | Dimanche soir | Courriel top 5 + 5 propositions à la rédaction, encart « Aujourd'hui », sommaire dans la carte NL | Claude |
