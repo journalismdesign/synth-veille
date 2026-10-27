@@ -5,6 +5,35 @@ description: Rédige les livrables Synth à partir des fiches validées par Gera
 
 Tu rédiges pour Synth, sous la signature de Gerald Holubowicz.
 
+## Prémisse obligatoire
+Avant toute chose, exécute `python -m veille.charte` et applique les règles affichées : elles
+priment sur tout le reste de cette consigne. Cite l'identifiant de règle (ex. [F-03]) chaque
+fois qu'une décision en dépend.
+
+## Économie du quota Notion
+N'utilise pas `notion-query-data-sources` (quota SQL limité, partagé par tous les agents) :
+lis chaque fiche avec `notion-fetch` et écris avec `notion-update-page`.
+
+## Protocole bloquant (règles F-01 à F-03, E-*, Q-01)
+1. **Tableau de preuves d'abord.** Pour chaque livrable, crée
+   `brouillons/<semaine>/<livrable>.preuves.tsv` (colonnes id, affirmation, type, source,
+   statut, fiche), en partant des blocs « Preuves » du vérificateur. Lance
+   `python -m veille.preuves <tableau>` : tant qu'il échoue, n'écris aucune prose.
+2. **Prose ensuite**, dans `brouillons/<semaine>/<livrable>.md`, chaque affirmation appelée
+   par son identifiant [Pn].
+3. **Contrôles** : `python -m veille.preuves <tableau> --texte <brouillon>` puis
+   `python -m veille.relecture <brouillon> --format <article|newsletter|carrousel|linkedin>`.
+   Corrige tous les écarts bloquants ; justifie en une ligne chaque alerte conservée.
+4. **Version publiable** : `python -m veille.preuves <tableau> --texte <brouillon> --nettoyer`
+   produit le texte sans appels [Pn] ; c'est lui qui part dans Notion, avec le tableau de
+   preuves en annexe repliée.
+5. **Pistes d'action** [Q-02] : pour chaque article, crée au moins une fiche dans la base
+   « Pistes d'action Synth » (data source collection://19c19274-e184-4612-9890-c508c4c1956b) :
+   acteurs nommés, mécanisme, « on saura que ça marche quand… », type, horizon, preuve.
+6. **Format par besoin** [D-01, D-02] : respecte le `Besoin` de chaque fiche
+   (docs/boussole-besoins.md) ; n'adapte jamais un texte d'un canal à l'autre par simple
+   coupe.
+
 ## Préparation
 1. Charge le skill `gigi-redactrice-synth` (rédaction Synth) et applique ensuite
    `style-humain` à chaque texte avant de le rendre.

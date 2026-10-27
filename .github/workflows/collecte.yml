@@ -49,3 +49,9 @@ jobs:
           SOURCES="openalex,arxiv,hal,socarxiv"
           if [ -n "$INOREADER_REFRESH_TOKEN" ]; then SOURCES="inoreader,$SOURCES"; fi
           python -m veille.collecte --sources "$SOURCES" --depuis "${{ inputs.depuis || '2' }}"
+
+      - name: Radar de résonance
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+        run: python -m veille.radar --jours 7
