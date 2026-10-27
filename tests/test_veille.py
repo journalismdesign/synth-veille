@@ -101,3 +101,36 @@ def test_ancrage_tech_ecarte_les_hors_sujet():
     assert a_ancrage_tech(pertinent, ancrage) and a_ancrage_tech(sonnac, ancrage)
     # « meta » mot entier : ne doit pas capter « metabolism »
     assert not a_ancrage_tech(Item("Metabolism of soil", "https://m", "OpenAlex"), ancrage)
+
+
+def test_selection_priorite_sauve_puis_flux_puis_academique():
+    from veille.collecte import selectionner
+    from veille.modele import ACADEMIQUE, FLUX, SAUVE
+    config = charger_config()
+    sauve_hors_sujet = Item("Recette de la tarte aux pommes", "https://a.fr/1", "Inoreader", origine=SAUVE)
+    flux_ok = Item("Les data centers et l'eau", "https://a.fr/2", "Inoreader", origine=FLUX)
+    flux_bruit = Item("Résultats du championnat de rugby", "https://a.fr/3", "Inoreader", origine=FLUX)
+    academique = Item("AI and platform labor: worker surveillance", "https://a.fr/4", "arXiv")
+    doublon_flux = Item("Les data centers et l'eau", "https://a.fr/2?utm_source=x", "Inoreader", origine=FLUX)
+    doublon_sauve = Item("Les data centers et l'eau", "https://a.fr/2", "Inoreader", origine=SAUVE)
+
+    retenus = selectionner([academique, flux_bruit, flux_ok, doublon_flux, sauve_hors_sujet, doublon_sauve], config)
+    # Les sauvés passent sans filtre et en tête ; le doublon garde l'origine la plus prioritaire
+    assert [(i.titre, i.origine) for i in retenus] == [
+        ("Recette de la tarte aux pommes", SAUVE),
+        ("Les data centers et l'eau", SAUVE),
+        ("AI and platform labor: worker surveillance", ACADEMIQUE),
+    ]
+
+
+def test_notion_promeut_un_article_sauve_apres_coup(monkeypatch):
+    from veille.modele import FLUX, SAUVE
+    from veille.notion import Notion
+    appels = []
+    n = Notion(jeton="x", base_id="base")
+    it = Item("Titre", "https://a.fr/1", "Inoreader", origine=SAUVE)
+    n._cache = {it.empreinte: ("page-1", FLUX)}
+    monkeypatch.setattr(n, "_requete", lambda methode, chemin, **kw: appels.append((methode, chemin, kw)) or {})
+    assert n.ajouter(it) == "promu"
+    assert appels == [("PATCH", "/pages/page-1", {"json": {"properties": {"Origine": {"select": {"name": SAUVE}}}}})]
+    assert n.ajouter(it) == "existe"

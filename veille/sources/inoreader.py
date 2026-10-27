@@ -1,4 +1,4 @@
-"""Inoreader : articles étoilés et articles d'un tag (par défaut « Synth »).
+"""Inoreader : articles sauvés (étoiles, tag « Synth ») puis l'ensemble du flux d'abonnements.
 
 Authentification OAuth2. Le jeton de rafraîchissement s'obtient une fois pour
 toutes avec `python -m veille.inoreader_auth`, puis se stocke en secret
@@ -13,7 +13,7 @@ from datetime import date, datetime, timezone
 
 import requests
 
-from ..modele import Item
+from ..modele import FLUX, SAUVE, Item
 
 API = "https://www.inoreader.com/reader/api/0"
 JETON_URL = "https://www.inoreader.com/oauth2/token"
@@ -35,24 +35,39 @@ def jeton_acces() -> str:
 
 
 def collecter(config: dict, depuis: date) -> list[Item]:
+    """Renvoie d'abord les articles sauvés, puis ceux du flux : le dédoublonnage garde le premier vu."""
     conf = config["inoreader"]
     entetes = {"Authorization": f"Bearer {jeton_acces()}"}
     ot = int(datetime.combine(depuis, datetime.min.time(), timezone.utc).timestamp())
     items: list[Item] = []
-    for flux in conf["flux"]:
-        continuation = None
-        while True:
-            params = {"n": 100, "ot": ot}
-            if continuation:
-                params["c"] = continuation
-            r = requests.get(f"{API}/stream/contents/{flux}", headers=entetes, params=params, timeout=30)
-            r.raise_for_status()
-            donnees = r.json()
-            items += [_vers_item(a) for a in donnees.get("items", []) if _url(a)]
-            continuation = donnees.get("continuation")
-            if not continuation:
-                break
+    for flux in conf["flux_sauves"]:
+        items += _lire(flux, entetes, ot, SAUVE, plafond=None)
+    for flux in conf.get("flux_complet", []):
+        items += _lire(flux, entetes, ot, FLUX, plafond=conf.get("max_articles_flux", 1500))
     return items
+
+
+def _lire(flux: str, entetes: dict, ot: int, origine: str, plafond: int | None) -> list[Item]:
+    items: list[Item] = []
+    continuation = None
+    while True:
+        params = {"n": 100, "ot": ot}
+        if continuation:
+            params["c"] = continuation
+        r = requests.get(f"{API}/stream/contents/{flux}", headers=entetes, params=params, timeout=30)
+        r.raise_for_status()
+        donnees = r.json()
+        for a in donnees.get("items", []):
+            if _url(a):
+                it = _vers_item(a)
+                it.origine = origine
+                items.append(it)
+        continuation = donnees.get("continuation")
+        if not continuation or (plafond and len(items) >= plafond):
+            break
+    if plafond and len(items) >= plafond:
+        print(f"::warning::Inoreader {flux} : plafond de {plafond} articles atteint, le reste est ignoré.")
+    return items[:plafond] if plafond else items
 
 
 def _url(article: dict) -> str | None:

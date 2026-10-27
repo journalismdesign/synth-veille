@@ -20,6 +20,12 @@ CONFIG = RACINE / "config" / "veille.toml"
 PARAMS_PISTAGE = re.compile(r"^(utm_|fbclid|gclid|mc_|igshid|ref$|ref_src|s$|si$)")
 
 
+# Libellés Notion de la propriété « Origine » : le préfixe numérique fixe l'ordre de tri
+SAUVE, FLUX, ACADEMIQUE, AUTRE = "1 · Sauvé", "2 · Flux Inoreader", "3 · Académique", "4 · Autre"
+ORIGINES_PAR_CANAL = {"Instagram": SAUVE, "Manuel": SAUVE, "Inoreader": FLUX,
+                      "OpenAlex": ACADEMIQUE, "arXiv": ACADEMIQUE, "HAL": ACADEMIQUE, "SocArXiv": ACADEMIQUE}
+
+
 @dataclass
 class Item:
     titre: str
@@ -31,6 +37,7 @@ class Item:
     date_publication: date | None = None
     axes: list[str] = field(default_factory=list)
     prescore: int = 0               # nombre de mots-clés d'axes trouvés (préfiltre, pas le score éditorial)
+    origine: str = ""               # SAUVE, FLUX ou ACADEMIQUE (voir ORIGINES) ; ordre de priorité éditoriale
 
     @property
     def empreinte(self) -> str:
