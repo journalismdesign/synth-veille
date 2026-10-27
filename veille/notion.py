@@ -40,19 +40,21 @@ class Notion:
             return r.json()
         raise RuntimeError(f"Notion : trop de requêtes refusées sur {chemin}")
 
-    def pages_recentes(self, jours: int) -> list[dict]:
-        """Fiches ajoutées depuis `jours` jours (pour le radar)."""
-        depuis = (date.today() - timedelta(days=jours)).isoformat()
-        pages, curseur = [], None
+    def pages(self, filtre: dict) -> list[dict]:
+        """Toutes les fiches répondant à un filtre de l'API Notion (pagination incluse)."""
+        resultat, curseur = [], None
         while True:
-            corps = {"page_size": 100,
-                     "filter": {"timestamp": "created_time", "created_time": {"on_or_after": depuis}},
-                     **({"start_cursor": curseur} if curseur else {})}
+            corps = {"page_size": 100, "filter": filtre, **({"start_cursor": curseur} if curseur else {})}
             res = self._requete("POST", f"/databases/{self.base_id}/query", json=corps)
-            pages += res.get("results", [])
+            resultat += res.get("results", [])
             if not res.get("has_more"):
-                return pages
+                return resultat
             curseur = res["next_cursor"]
+
+    def pages_recentes(self, jours: int) -> list[dict]:
+        """Fiches ajoutées depuis `jours` jours (radar, top de la semaine)."""
+        depuis = (date.today() - timedelta(days=jours)).isoformat()
+        return self.pages({"timestamp": "created_time", "created_time": {"on_or_after": depuis}})
 
     def maj(self, page_id: str, proprietes: dict) -> None:
         self._requete("PATCH", f"/pages/{page_id}", json={"properties": proprietes})

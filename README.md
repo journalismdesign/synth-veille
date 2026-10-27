@@ -74,9 +74,10 @@ Méthode inspirée de Damien Van Achter (« Pourquoi et comment j'ai codé ma li
 
 ## Lire la semaine dans Notion
 
-Vue **« Cette semaine »** de la base Veille Synth : fiches ajoutées depuis 7 jours, hors
-« Écarté », triées par Origine (1 · Sauvé, 2 · Flux Inoreader, 3 · Académique), puis
-Score éditorial (après `/veille-hebdo`), puis Pré-score (calculé dès la collecte).
+- **« Cette semaine »** : les 30 fiches les plus intéressantes des 7 derniers jours (case
+  « Top semaine », recalculée après chaque collecte par `python -m veille.top`). Les fiches
+  retenues par Gerald passent en tête, puis Score, Résonance, Pré-score.
+- **« Toutes les fiches (par score) »** (vue par défaut) : tout le reste, même ordre.
 
 ## Réglages
 
