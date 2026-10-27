@@ -103,6 +103,26 @@ def test_ancrage_tech_ecarte_les_hors_sujet():
     assert not a_ancrage_tech(Item("Metabolism of soil", "https://m", "OpenAlex"), ancrage)
 
 
+def test_inoreader_memorise_le_jeton_renouvele(tmp_path, monkeypatch, capsys):
+    cible = tmp_path / "jeton"
+    monkeypatch.setenv("INOREADER_APP_ID", "id")
+    monkeypatch.setenv("INOREADER_APP_KEY", "cle")
+    monkeypatch.setenv("INOREADER_REFRESH_TOKEN", "ancien")
+    monkeypatch.setenv("INOREADER_NOUVEAU_JETON_FICHIER", str(cible))
+
+    class Reponse:
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {"access_token": "acces", "refresh_token": "nouveau"}
+
+    monkeypatch.setattr(inoreader.requests, "post", lambda *a, **k: Reponse())
+    assert inoreader.jeton_acces() == "acces"
+    assert cible.read_text() == "nouveau"
+    assert "::add-mask::nouveau" in capsys.readouterr().out
+
+
 def test_selection_priorite_sauve_puis_flux_puis_academique():
     from veille.collecte import selectionner
     from veille.modele import ACADEMIQUE, FLUX, SAUVE
