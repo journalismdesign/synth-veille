@@ -12,6 +12,11 @@ Utilisée par l'agent `trieur` (note provisoire) puis corrigée par `verificateu
 | **Angle Synth** | 0–3 | Angle mort du traitement dominant, voix absentes, contre-récit argumenté, effet de second ordre. |
 | **Déclinabilité** | 0–1 | Chiffre fort, image, mécanisme simple à montrer en carrousel. |
 
+## Bonus d'origine
+
+- **+2** : article sauvé par Gerald (Origine « 1 · Sauvé »). Ce choix humain vaut indice de pertinence.
+- **+0** : flux Inoreader. **+0** : académique (son rôle premier est d'adosser un sujet d'actualité).
+
 ## Malus
 
 - **−3** : annonce d'entreprise ou communiqué sans effet observable (le « discours industriel » n'est pas un fait).
@@ -27,6 +32,7 @@ Utilisée par l'agent `trieur` (note provisoire) puis corrigée par `verificateu
 ## Équilibre de la sélection hebdomadaire (10 candidats)
 
 - Au moins 4 axes différents représentés.
+- Au moins 7 candidats issus d'Inoreader (Sauvé ou Flux), au plus 3 sujets purement académiques.
 - Au moins 2 candidats adossés à une étude ou un preprint.
 - Pas plus de 3 sujets sur la même entreprise.
 - Au moins 1 sujet européen ou français.

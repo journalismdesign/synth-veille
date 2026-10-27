@@ -14,12 +14,36 @@ import sys
 from datetime import date, timedelta
 from pathlib import Path
 
-from .modele import Item, a_ancrage_tech, charger_config, prequalifier
+from .modele import ACADEMIQUE, AUTRE, ORIGINES_PAR_CANAL, SAUVE, Item, a_ancrage_tech, charger_config, prequalifier
 from .sources import arxiv, hal, inoreader, instagram, openalex, socarxiv
 
 SOURCES = {"inoreader": inoreader, "openalex": openalex, "arxiv": arxiv, "hal": hal, "socarxiv": socarxiv}
-# Sources déjà curatées par Gerald : pas de préfiltre éliminatoire
-SOURCES_CURATEES = {"Inoreader", "Instagram", "Manuel"}
+
+
+def selectionner(items: list[Item], config: dict) -> list[Item]:
+    """Ordonne par priorité (sauvés > flux > académique), préfiltre et dédoublonne."""
+    axes = config["axes"]
+    ancrage = config["prefiltre"]["ancrage_tech"]
+    # Seuil par origine : les articles sauvés passent toujours, le flux est filtré moins sévèrement
+    seuils = {SAUVE: None, ACADEMIQUE: config["prefiltre"]["score_minimum_academique"]}
+    seuil_defaut = config["prefiltre"]["score_minimum_flux"]
+
+    for it in items:
+        it.origine = it.origine or ORIGINES_PAR_CANAL.get(it.canal, AUTRE)
+    items = sorted(items, key=lambda i: i.origine)  # tri stable
+
+    # Le premier vu, donc le plus prioritaire, gagne le dédoublonnage
+    retenus, vus = [], set()
+    for it in items:
+        prequalifier(it, axes)
+        seuil = seuils.get(it.origine, seuil_defaut)
+        if seuil is not None and (it.prescore < seuil or not a_ancrage_tech(it, ancrage)):
+            continue
+        if it.empreinte in vus:
+            continue
+        vus.add(it.empreinte)
+        retenus.append(it)
+    return retenus
 
 
 def main() -> int:
@@ -32,9 +56,6 @@ def main() -> int:
 
     config = charger_config()
     depuis = date.today() - timedelta(days=args.depuis)
-    axes = config["axes"]
-    seuil = config["prefiltre"]["score_minimum_academique"]
-    ancrage = config["prefiltre"]["ancrage_tech"]
 
     items: list[Item] = []
     echecs = []
@@ -49,26 +70,17 @@ def main() -> int:
     if args.instagram:
         items += instagram.collecter_export(args.instagram, depuis)
 
-    # Préfiltre lexical, puis dédoublonnage interne au lot
-    retenus, vus = [], set()
-    for it in items:
-        prequalifier(it, axes)
-        if it.canal not in SOURCES_CURATEES and (it.prescore < seuil or not a_ancrage_tech(it, ancrage)):
-            continue
-        if it.empreinte in vus:
-            continue
-        vus.add(it.empreinte)
-        retenus.append(it)
+    retenus = selectionner(items, config)
     print(f"Après préfiltre et dédoublonnage : {len(retenus)} / {len(items)}")
 
     if args.sec:
-        for it in sorted(retenus, key=lambda i: -i.prescore):
-            print(f"[{it.canal:9}] {it.prescore:2} {it.titre[:90]}  {it.url}")
+        for it in sorted(retenus, key=lambda i: (i.origine, -i.prescore)):
+            print(f"[{it.origine[:1]} {it.canal:9}] {it.prescore:2} {it.titre[:90]}  {it.url}")
     else:
         from .notion import Notion
         notion = Notion()
-        nouveaux = sum(notion.ajouter(it) for it in retenus)
-        print(f"Notion : {nouveaux} nouvelles fiches")
+        bilan = [notion.ajouter(it) for it in retenus]
+        print(f"Notion : {bilan.count('cree')} nouvelles fiches, {bilan.count('promu')} promues en « Sauvé »")
 
     return 1 if echecs else 0
 

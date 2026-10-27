@@ -24,6 +24,7 @@ Une liste d'URL de fiches Notion (base « Veille Synth », data source
    la plus proche de la source primaire, passe les autres en « Écarté » avec
    « Doublon de <titre> » en justification.
 5. Statut : « Trié » si Score ≥ 8, sinon « Écarté ».
+6. Applique le bonus d'origine de la grille (+2 pour « 1 · Sauvé ») et mentionne-le dans la justification.
 
 ## Règles
 - Une annonce d'entreprise n'est pas un fait : applique le malus « discours industriel ».

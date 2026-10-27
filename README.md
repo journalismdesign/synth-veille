@@ -5,7 +5,7 @@ Instagram) à la sélection hebdomadaire de 10 sujets, puis aux livrables — 5 
 newsletter, un article de 3 000 signes, des carrousels Instagram, un post LinkedIn.
 
 ```
-Inoreader ─┐
+Inoreader ─┐  (1 · sauvés, 2 · flux complet filtré)
 OpenAlex  ─┤                          ┌─ trieur (×n, parallèle)
 arXiv     ─┤  GitHub Actions /6 h     │
 HAL       ─┼──────────────────────▶ Notion ── /veille-hebdo ──┼─ verificateur (×3)
@@ -55,6 +55,12 @@ pip install -r requirements.txt
 pytest -q
 python -m veille.collecte --sources openalex,arxiv,hal --depuis 7 --sec   # aperçu sans écrire
 ```
+
+## Lire la semaine dans Notion
+
+Vue **« Cette semaine »** de la base Veille Synth : fiches ajoutées depuis 7 jours, hors
+« Écarté », triées par Origine (1 · Sauvé, 2 · Flux Inoreader, 3 · Académique), puis
+Score éditorial (après `/veille-hebdo`), puis Pré-score (calculé dès la collecte).
 
 ## Réglages
 

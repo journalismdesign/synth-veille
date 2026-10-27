@@ -7,6 +7,8 @@
 [prefiltre]
 # Nombre minimal de mots-clés d'axes trouvés pour garder un item académique
 score_minimum_academique = 2
+# Flux Inoreader : sources déjà choisies par Gerald, un seul mot-clé d'axe suffit (+ ancrage tech)
+score_minimum_flux = 1
 # Un item académique doit aussi contenir au moins un de ces termes : sans eux, un article
 # de science politique ou d'économie sans rapport avec le numérique passait le seuil.
 ancrage_tech = ["ai", "a.i.", "artificial intelligence", "intelligence artificielle", "ia", "machine learning",
@@ -31,8 +33,13 @@ ancrage_tech = ["ai", "a.i.", "artificial intelligence", "intelligence artificie
 "Corps & populations exposées" = ["health", "santé", "mental health", "santé mentale", "children", "enfants", "youth", "jeunes", "migrant*", "gender", "genre", "women", "femmes", "global south", "sud global", "disability", "handicap", "welfare", "aide sociale", "poverty", "pauvreté", "chatbot companion", "compagnon"]
 
 [inoreader]
-# Flux lus : étoiles + tag « Synth » (créer le tag dans Inoreader et y ranger ce qui compte)
-flux = ["user/-/state/com.google/starred", "user/-/label/Synth"]
+# Articles sauvés (étoiles + tag « Synth ») : toujours retenus, origine « 1 · Sauvé »
+flux_sauves = ["user/-/state/com.google/starred", "user/-/label/Synth"]
+# Flux complet des abonnements : filtré (ancrage tech + score_minimum_flux), origine « 2 · Flux Inoreader ».
+# Pour restreindre à un dossier : "user/-/label/<Nom du dossier>"
+flux_complet = ["user/-/state/com.google/reading-list"]
+# Garde-fou de volume par collecte (toutes les 6 h)
+max_articles_flux = 1500
 
 [openalex]
 mailto = "hello@journalism.design"
