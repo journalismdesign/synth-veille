@@ -166,3 +166,12 @@ def test_notion_reconnait_une_fiche_sans_empreinte(monkeypatch):
         "Origine": {"select": {"name": "4 · Autre"}}}}
     monkeypatch.setattr(n, "_requete", lambda *a, **k: {"results": [page], "has_more": False})
     assert n.ajouter(Item("Titre", "https://a.fr/article?utm_source=x", "Inoreader")) == "existe"
+
+
+def test_echec_bloquant_seulement_inoreader_ou_tout():
+    from veille.collecte import est_bloquant
+    sources = ["inoreader", "openalex", "arxiv"]
+    assert not est_bloquant(["arxiv"], sources)
+    assert est_bloquant(["inoreader"], sources)
+    assert est_bloquant(["openalex", "arxiv"], ["openalex", "arxiv"])
+    assert not est_bloquant([], sources)
