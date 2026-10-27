@@ -9,7 +9,9 @@ Chaîne de veille éditoriale de Synth (synthmedia.fr), média indépendant tech
   redacteur, metteur-en-forme), orchestrés par les skills `/veille-hebdo` et `/redaction-hebdo`.
 - **Point de décision humain** : Gerald passe les fiches en « Retenu NL » / « Retenu article ».
   Aucun agent ne prend cette décision à sa place, et rien n'est publié hors de Notion et
-  des brouillons Canva.
+  des brouillons Canva. Seule exception, interne : le courriel de proposition hebdomadaire
+  à la rédaction (`config/veille.toml`, `[diffusion]`).
+- **Calendrier** : choix de Gerald jeudi midi, publication vendredi après-midi.
 
 **Charte codée** : `charte/charte.toml` est la source de vérité de la ligne éditoriale
 (règles identifiées P-, F-, Q-, E-, S-, D-). Tout agent la charge en prémisse
