@@ -7,8 +7,11 @@ indépendantes dans la période, plutôt que les plus bruyants.
 Méthode volontairement simple et lisible : deux fiches parlent du même sujet si leurs
 titres partagent assez de termes significatifs (dont au moins un nom propre ou un terme
 long). Les groupes sont formés par transitivité. La résonance d'un groupe est le nombre
-de sources (domaines) distinctes. Limite connue : un même sujet traité en français et en
-anglais n'est pas rapproché.
+de sources distinctes, la source étant le nom du flux Inoreader (à défaut, le domaine) :
+plusieurs posts Bluesky d'un même média ne comptent que pour un. Seules les fiches
+Inoreader (sauvées ou flux) sont prises en compte : un preprint déposé à la fois sur OSF
+et sous DOI n'est pas un sujet qui « résonne ». Limite connue : un même sujet traité en
+français et en anglais n'est pas rapproché.
 """
 from __future__ import annotations
 
@@ -31,8 +34,18 @@ about after over into than more most just our your their his her we you they he 
 """.split())
 
 
+URL = re.compile(r"https?://\S+|www\.\S+")
+ORIGINES_RADAR = {"1 · Sauvé", "2 · Flux Inoreader"}
+
+
+def nettoyer_titre(titre: str) -> str:
+    """Retire les URL (fréquentes dans les posts sociaux) et les sauts de ligne."""
+    return " ".join(URL.sub(" ", titre).split())
+
+
 def termes(titre: str) -> set[str]:
     """Termes significatifs d'un titre : minuscules, sans accents, hors mots vides."""
+    titre = nettoyer_titre(titre)
     sans_accents = unicodedata.normalize("NFKD", titre).encode("ascii", "ignore").decode()
     mots = re.findall(r"[A-Za-z0-9][A-Za-z0-9-]+", sans_accents)
     return {m.lower() for m in mots if m.lower() not in MOTS_VIDES and len(m) >= 3}
@@ -40,7 +53,7 @@ def termes(titre: str) -> set[str]:
 
 def noms_propres(titre: str) -> set[str]:
     """Mots à majuscule hors début de titre (heuristique : entités nommées)."""
-    mots = re.findall(r"\b[A-ZÀ-Ý][\w-]+", titre)[1:]
+    mots = re.findall(r"\b[A-ZÀ-Ý][\w-]+", nettoyer_titre(titre))[1:]
     return {unicodedata.normalize("NFKD", m).encode("ascii", "ignore").decode().lower() for m in mots}
 
 
@@ -78,8 +91,14 @@ def grouper(fiches: list[dict]) -> list[list[dict]]:
     return [g for g in groupes.values() if len(g) > 1]
 
 
+def cle_source(fiche: dict) -> str:
+    """Identité de la source : nom du flux normalisé, à défaut le domaine."""
+    nom = " ".join((fiche.get("source") or "").lower().split())
+    return nom or fiche.get("domaine", "")
+
+
 def resonance(groupe: list[dict]) -> int:
-    return len({f["domaine"] for f in groupe if f["domaine"]})
+    return len({cle_source(f) for f in groupe if cle_source(f)})
 
 
 def libelle(groupe: list[dict], numero: int) -> str:
@@ -93,9 +112,11 @@ def depuis_notion(pages: list[dict]) -> list[dict]:
         props = p["properties"]
         titre = "".join(x["plain_text"] for x in props.get("Titre", {}).get("title", []))
         url = (props.get("URL") or {}).get("url") or ""
-        if titre:
+        source = "".join(x["plain_text"] for x in props.get("Source", {}).get("rich_text", []))
+        origine = ((props.get("Origine") or {}).get("select") or {}).get("name", "")
+        if titre and origine in ORIGINES_RADAR:
             fiches.append({"id": p["id"], "titre": titre, "termes": termes(titre),
-                           "noms": noms_propres(titre), "domaine": domaine(url)})
+                           "noms": noms_propres(titre), "domaine": domaine(url), "source": source})
     return fiches
 
 
@@ -107,9 +128,11 @@ def main() -> int:
 
     from .notion import Notion
     notion = Notion()
-    fiches = depuis_notion(notion.pages_recentes(args.jours))
-    groupes = sorted(grouper(fiches), key=resonance, reverse=True)
-    print(f"{len(fiches)} fiches · {len(groupes)} sujets partagés")
+    pages = notion.pages_recentes(args.jours)
+    fiches = depuis_notion(pages)
+    # Un groupe issu d'une seule source (fil d'un même média) n'est pas une résonance
+    groupes = sorted((g for g in grouper(fiches) if resonance(g) >= 2), key=resonance, reverse=True)
+    print(f"{len(fiches)} fiches Inoreader · {len(groupes)} sujets repris par plusieurs sources")
     for n, g in enumerate(groupes, 1):
         r, nom = resonance(g), libelle(g, n)
         print(f"  {r} sources · {nom}")
@@ -120,6 +143,14 @@ def main() -> int:
                     "Résonance": {"number": r},
                     "Sujet radar": {"rich_text": [{"type": "text", "text": {"content": nom}}]},
                 })
+    # Effacer les résonances devenues caduques (sujet retombé, ou calcul antérieur erroné)
+    dans_un_groupe = {f["id"] for g in groupes for f in g}
+    perimees = [pg["id"] for pg in pages if pg["id"] not in dans_un_groupe
+                and (pg["properties"].get("Résonance") or {}).get("number") is not None]
+    print(f"{len(perimees)} résonances effacées")
+    if not args.sec:
+        for page_id in perimees:
+            notion.maj(page_id, {"Résonance": {"number": None}, "Sujet radar": {"rich_text": []}})
     return 0
 
 
